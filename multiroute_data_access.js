@@ -1,16 +1,14 @@
 function init () {
     // Создаем модель мультимаршрута.
-    var localStorageRoute = JSON.parse(localStorage.route),
-        isTestData = false,
-        referencePoints = (isTestData) ? [
+    var isTestData = false,
+        localStorageRoute = (localStorage.route && !isTestData) ? JSON.parse(localStorage.route) : [
             "Москва, Ленинский проспект",
             "Москва, Льва Толстого, 16",
             "Москва, Кремлевская набережная",
             "Москва, парк Сокольники"
-        ] : localStorageRoute,
-        //viaIndexes = (isTestData) ? [2] : localStorageRoute.viaIndexes,
+        ],
         multiRouteModel = new ymaps.multiRouter.MultiRouteModel(
-            referencePoints,{}/*,{viaIndexes: viaIndexes}*/
+            localStorageRoute,{}/*,{viaIndexes: viaIndexes}*/
         ),
 
     buttonEditor = new ymaps.control.Button({

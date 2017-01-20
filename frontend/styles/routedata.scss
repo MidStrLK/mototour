@@ -1,0 +1,53 @@
+#viewData{
+
+  display: none;
+
+  width: 500px;
+
+  select,
+  input,
+  textarea{
+    color: black;
+    border: none;
+    //width: 100%;
+  }
+
+  input {
+    height: 25px;
+    width: 340px;
+    display: inline-block;
+  }
+
+  select{
+    color: black;
+    width: 150px;
+    height: 25px;
+    //margin: 5px 0;
+    display: inline-block;
+    float: right;
+  }
+
+  textarea{
+    height: 100px;
+    width: 500px;
+    margin: -3px 0 5px 0;
+  }
+
+  .save-route,
+  .remove-route{
+    display: inline-block;
+  }
+
+  .save-route{
+    width: 200px;
+  }
+
+  .remove-route{
+    float: right;
+    width: 100px;
+    background-color: red;
+    color: white;
+    border-radius: 17px;
+  }
+
+}

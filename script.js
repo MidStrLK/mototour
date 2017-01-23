@@ -86,7 +86,7 @@
 	    value: true
 	});
 	
-	exports.default = function (map, route) {
+	exports.default = function (map, route, note) {
 	    /* Массив с точками маршрута */
 	    var localStorageRoute = route || ["Мытищи, рождественская, 11", "Москва, архитектора власова, 41"],
 	
@@ -104,6 +104,8 @@
 	        boundsAutoApply: true
 	    }),
 	        editBtn = (0, _mapButtons2.default)(map);
+	
+	    ymaps.table_note = note;
 	
 	    if (map.multiRoute) map.geoObjects.remove(map.multiRoute);
 	    map.multiRoute = multiRoute;
@@ -33266,9 +33268,6 @@
 	            var processorName = CustomView.stateProcessors[this.state],
 	                htmlData = this[processorName](this.multiRouteModel, this.multiRoute, this.stateChangeEvent);
 	
-	            //this.outputElement.html(htmlData);
-	
-	            //console.info('this.outputElement - ',this.outputElement.find('#custom-view-span'), htmlData);
 	            this.outputElement.find('#custom-view-span').html(htmlData.label);
 	            this.outputElement.find('#custom-view-table').html(htmlData.table);
 	        },
@@ -33341,8 +33340,6 @@
 	
 	            ymaps.myMultiRoute = route.multiRoute;
 	
-	            console.info('route.multiRoute - ', route.multiRoute);
-	
 	            //this.saveRoutes(route.multiRoute);
 	
 	            points[0].properties._data.name = 'СТАРТ';
@@ -33350,9 +33347,14 @@
 	            for (var i = 0, l = route.getPaths().length; i < l; i++) {
 	                var path = route.getPaths()[i];
 	                var distance = path._json.properties.distance ? path._json.properties.distance.text : '',
-	                    duration = path._json.properties.duration ? path._json.properties.duration.text : '';
+	                    duration = path._json.properties.duration ? path._json.properties.duration.text : '',
+	                    res = '<tr><td class="custom-view-table-number">' + (i + 1) + '</td><td class="custom-view-table-alphabet">' + alphabet[i] + ' 一 ' + alphabet[i + 1] + '</td>' + '<td class="custom-view-table-distance">' + distance + '</td>' + '<td class="custom-view-table-duration">' + duration + '</td>' + '<td><input  class="custom-view-table-text" ng-model="route.tabletext_' + i + '"';
 	
-	                result.push('<tr><td class="custom-view-table-number">' + (i + 1) + '</td><td class="custom-view-table-alphabet">' + alphabet[i] + ' 一 ' + alphabet[i + 1] + '</td>' + '<td class="custom-view-table-distance">' + distance + '</td>' + '<td class="custom-view-table-duration">' + duration + "</td></tr>");
+	                if (ymaps.table_note && ymaps.table_note[i]) res += ' value="' + ymaps.table_note[i] + '"';
+	
+	                res += '></td></tr>';
+	
+	                result.push(res);
 	
 	                if (points[i + 1]) points[i + 1].properties._data.name = distance + ' - ' + duration;
 	
@@ -33465,32 +33467,42 @@
 	
 	        /* Открыть маршрут */
 	        $scope.openRoute = function (data) {
-	
+	            console.info('open - ', data);
 	            $scope.route = {
 	                _id: data._id,
 	                name: data.name,
 	                text: data.text,
+	                date: data.date ? new Date(data.date) : null,
 	                type: $scope.typelist.conver[data.type]
 	            };
 	
 	            $('#viewData').show();
 	
 	            if (app && app.ymap && mapRouteCreate) {
-	                mapRouteCreate(app.ymap, JSON.parse(data.route));
+	                mapRouteCreate(app.ymap, JSON.parse(data.route), data.note);
 	            }
 	        };
 	
 	        /* Сохранить маршрут */
 	        $scope.saveRoute = function (data) {
-	            var route = app.ymap.multiRoute.getRoute(app.ymap.multiRoute),
+	            console.info('save - ', data);
+	            var $tablenote = $('.custom-view-table-text'),
+	                tablenote = [],
+	                route = app.ymap.multiRoute.getRoute(app.ymap.multiRoute),
 	                res = {
 	                _id: data._id || null,
+	                date: data.date,
 	                name: data.name,
 	                type: $scope.typelist.conver[data.type],
 	                text: data.text || null,
 	                route: JSON.stringify(route)
 	            };
 	
+	            $tablenote.each(function (t, a) {
+	                tablenote.push($(a).val());
+	            });
+	            res.note = tablenote;
+	            console.info('save res - ', res);
 	            $http.post('/api/save', res).then(function () {
 	                $scope.getRoutes();
 	            });

@@ -8,7 +8,7 @@
     }
 
 
-  width: 450px;
+  width: 100%;
 
   #custom-view-span{
     margin-left: 20px;
@@ -19,27 +19,36 @@
   }
 
   #custom-view-table{
-    width: 450px;
+    width: 100%;
+    margin: 10px;
 
     .custom-view-table-number{
-      width: 50px;
+      width: 20px;
       text-align: right;
     }
 
     .custom-view-table-alphabet{
-      width: 100px;
+      width: 55px;
       text-align: center;
     }
 
     .custom-view-table-distance{
-      width: 150px;
+      width: 60px;
       text-align: right;
-      padding-right: 20px;
+      padding-right: 10px;
     }
 
     .custom-view-table-duration{
-      width: 200px;
+      width: 100px;
       text-align: left;
+    }
+
+    .custom-view-table-text{
+      text-align: left;
+      width: 100%;
+      color: #FFC500;
+      background-color: #2B2C39;
+      border: 1px solid #FFC500;
     }
 
   }

@@ -58,9 +58,6 @@ ymaps.modules.define('MultiRouteCustomView', [
             let processorName = CustomView.stateProcessors[this.state],
                 htmlData = this[processorName](this.multiRouteModel, this.multiRoute, this.stateChangeEvent);
 
-            //this.outputElement.html(htmlData);
-
-            //console.info('this.outputElement - ',this.outputElement.find('#custom-view-span'), htmlData);
             this.outputElement.find('#custom-view-span').html(htmlData.label);
             this.outputElement.find('#custom-view-table').html(htmlData.table);
 
@@ -135,8 +132,6 @@ ymaps.modules.define('MultiRouteCustomView', [
 
             ymaps.myMultiRoute = route.multiRoute;
 
-            console.info('route.multiRoute - ',route.multiRoute);
-
             //this.saveRoutes(route.multiRoute);
 
             points[0].properties._data.name = 'СТАРТ';
@@ -144,12 +139,18 @@ ymaps.modules.define('MultiRouteCustomView', [
             for (var i = 0, l = route.getPaths().length; i < l; i++) {
                 var path = route.getPaths()[i];
                 var distance = (path._json.properties.distance) ? path._json.properties.distance.text : '',
-                    duration = (path._json.properties.duration) ? path._json.properties.duration.text : '';
+                    duration = (path._json.properties.duration) ? path._json.properties.duration.text : '',
+                    res = '<tr><td class="custom-view-table-number">' + (i + 1) +
+                        '</td><td class="custom-view-table-alphabet">' + alphabet[i] + ' 一 ' + alphabet[i + 1] + '</td>' +
+                        '<td class="custom-view-table-distance">' + distance + '</td>' +
+                        '<td class="custom-view-table-duration">' + duration + '</td>' +
+                        '<td><input  class="custom-view-table-text" ng-model="route.tabletext_' + i + '"';
 
-                result.push('<tr><td class="custom-view-table-number">' + (i + 1) +
-                    '</td><td class="custom-view-table-alphabet">' + alphabet[i] + ' 一 ' + alphabet[i + 1] + '</td>' +
-                    '<td class="custom-view-table-distance">' + distance + '</td>' +
-                    '<td class="custom-view-table-duration">' + duration + "</td></tr>");
+                if(ymaps.table_note && ymaps.table_note[i]) res += ' value="' + ymaps.table_note[i] + '"';
+
+                res += '></td></tr>';
+
+                result.push(res);
 
                 if (points[i + 1]) points[i + 1].properties._data.name = distance + ' - ' + duration;
 

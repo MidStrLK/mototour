@@ -1,6 +1,6 @@
 import buttonEditor from "./mapButtons";
 
-export default function(map, route) {
+export default function(map, route, note) {
     /* Массив с точками маршрута */
     var localStorageRoute = route || [
             "Мытищи, рождественская, 11",
@@ -21,6 +21,7 @@ export default function(map, route) {
         }),
         editBtn = buttonEditor(map);
 
+    ymaps.table_note = note;
 
     if(map.multiRoute) map.geoObjects.remove(map.multiRoute);
     map.multiRoute = multiRoute;

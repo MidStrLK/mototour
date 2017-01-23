@@ -39,8 +39,8 @@ export default function(angular, mapRouteCreate){
                 $scope.route = {
                     name: '',
                     text: '',
-                    type: $scope.typelist.conver['plan'],
-                }
+                    type: $scope.typelist.conver['plan']
+                };
 
                 $('#viewData').show();
 
@@ -51,32 +51,40 @@ export default function(angular, mapRouteCreate){
 
             /* Открыть маршрут */
             $scope.openRoute = function (data) {
-
+console.info('open - ',data);
                 $scope.route = {
                     _id:    data._id,
                     name:   data.name,
                     text:   data.text,
+                    date:   data.date ? (new Date(data.date)) : null,
                     type:   $scope.typelist.conver[data.type]
                 };
 
                 $('#viewData').show();
 
                 if(app && app.ymap && mapRouteCreate){
-                    mapRouteCreate(app.ymap, JSON.parse(data.route));
+                    mapRouteCreate(app.ymap, JSON.parse(data.route), data.note);
                 }
             };
 
             /* Сохранить маршрут */
             $scope.saveRoute = function (data) {
-                let route = app.ymap.multiRoute.getRoute(app.ymap.multiRoute),
+console.info('save - ',data);
+                let $tablenote = $('.custom-view-table-text'),
+                    tablenote = [],
+                    route = app.ymap.multiRoute.getRoute(app.ymap.multiRoute),
                     res = {
                         _id:    data._id || null,
+                        date:   data.date,
                         name:   data.name,
                         type:   $scope.typelist.conver[data.type],
                         text:   data.text || null,
                         route:  JSON.stringify(route)
                     };
 
+                $tablenote.each(function(t,a){tablenote.push($(a).val())});
+                res.note = tablenote;
+console.info('save res - ',res);
                 $http.post('/api/save', res).then(function () {
                     $scope.getRoutes();
                 });

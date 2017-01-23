@@ -49,11 +49,13 @@
                     <td id="viewData">
                         <!--<form ng-submit="saveRoute(id, nameroute, type, text)">-->
                             <input type="hidden"    ng-model="route._id"/>
-                            <input           ng-model="route.name" required placeholder="Название"/>
+                            <input class="input-name" ng-model="route.name" required placeholder="Название"/>
                             <select name="type"     ng-model="route.type">
                                 <option ng-repeat="item in typelist.combo" value="{{item}}" >{{item}}</option>
                             </select>
-                            <textarea        ng-model="route.text" placeholder="Описание" ></textarea>
+                        <input type="date" ng-model="route.date" class="input-date">
+                        <!--<input date-time format="yyyy-MM-dd" ng-model="route.date" class="ng-pristine ng-valid ng-scope ng-valid-min ng-touched">-->
+                        <textarea        ng-model="route.text" placeholder="Описание" ></textarea>
                             <!--<input type="submit" id="submit" value="Сохранить" />-->
                             <button class="save-route"   ng-click="saveRoute(route)">Сохранить</button>
                             <button class="remove-route" ng-click="removeRoute(route)">Удалить</button>

@@ -281,7 +281,7 @@ table {
 #viewContainer {
   color: yellow;
   height: 29%;
-  width: 450px;
+  width: 100%;
 }
 
 #viewContainer div {
@@ -298,33 +298,43 @@ table {
 }
 
 #viewContainer #custom-view-table {
-  width: 450px;
+  width: 100%;
+  margin: 10px;
 }
 
 #viewContainer #custom-view-table .custom-view-table-number {
-  width: 50px;
+  width: 20px;
   text-align: right;
 }
 
 #viewContainer #custom-view-table .custom-view-table-alphabet {
-  width: 100px;
+  width: 55px;
   text-align: center;
 }
 
 #viewContainer #custom-view-table .custom-view-table-distance {
-  width: 150px;
+  width: 60px;
   text-align: right;
-  padding-right: 20px;
+  padding-right: 10px;
 }
 
 #viewContainer #custom-view-table .custom-view-table-duration {
-  width: 200px;
+  width: 100px;
   text-align: left;
+}
+
+#viewContainer #custom-view-table .custom-view-table-text {
+  text-align: left;
+  width: 100%;
+  color: #FFC500;
+  background-color: #2B2C39;
+  border: 1px solid #FFC500;
 }
 
 #viewData {
   display: none;
   width: 500px;
+  padding-top: 10px;
 }
 
 #viewData select,
@@ -334,9 +344,15 @@ table {
   border: none;
 }
 
-#viewData input {
+#viewData .input-name {
   height: 25px;
-  width: 340px;
+  width: 192px;
+  display: inline-block;
+}
+
+#viewData .input-date {
+  height: 25px;
+  width: 150px;
   display: inline-block;
 }
 
@@ -345,7 +361,6 @@ table {
   width: 150px;
   height: 25px;
   display: inline-block;
-  float: right;
 }
 
 #viewData textarea {

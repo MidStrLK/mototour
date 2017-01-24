@@ -9,7 +9,9 @@ export default function(map, route, note, delay) {
 
     /* Модель маршрута с точками */
         multiRouteModel = new ymaps.multiRouter.MultiRouteModel(
-            localStorageRoute,{}/*,{viaIndexes: viaIndexes}*/
+            localStorageRoute,{
+                editorMidPointsType: "way"
+            }/*,{viaIndexes: viaIndexes}*/
         ),
 
     /* Создаем на основе существующей модели мультимаршрут. */

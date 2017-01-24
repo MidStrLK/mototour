@@ -92,7 +92,9 @@
 	
 	
 	    /* Модель маршрута с точками */
-	    multiRouteModel = new ymaps.multiRouter.MultiRouteModel(localStorageRoute, {} /*,{viaIndexes: viaIndexes}*/
+	    multiRouteModel = new ymaps.multiRouter.MultiRouteModel(localStorageRoute, {
+	        editorMidPointsType: "way"
+	    } /*,{viaIndexes: viaIndexes}*/
 	    ),
 	
 	

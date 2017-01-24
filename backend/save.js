@@ -8,15 +8,6 @@ function saveRoute(callback, data,mongodb, COLLECTION){
         let res = '';
         if(!err && result && result.ops) res = result.ops;
 
-
-        if(data && data.route && data.route.forEach){
-            let arr = [];
-            data.route.forEach(function(val){
-                if(val) arr.push(val);
-            });
-            data.route = arr;
-        }
-
         callback(err, res);
     };
 

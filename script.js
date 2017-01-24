@@ -33541,8 +33541,19 @@
 	                $tabledelay = $('.custom-view-table-delay input'),
 	                tabledelay = [],
 	                tablenote = [],
-	                route = app.ymap.multiRoute.getRoute(app.ymap.multiRoute),
-	                res = {
+	                route = app.ymap.multiRoute.getRoute(app.ymap.multiRoute);
+	
+	            if (route && route.forEach) {
+	                (function () {
+	                    var arr = [];
+	                    route.forEach(function (val) {
+	                        if (val) arr.push(val);
+	                    });
+	                    route = arr;
+	                })();
+	            }
+	
+	            var res = {
 	                id: data.id || createId(),
 	                date: data.date,
 	                name: data.name,

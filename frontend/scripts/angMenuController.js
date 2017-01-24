@@ -76,8 +76,17 @@ export default function(angular, mapRouteCreate){
                     $tabledelay = $('.custom-view-table-delay input'),
                     tabledelay = [],
                     tablenote = [],
-                    route = app.ymap.multiRoute.getRoute(app.ymap.multiRoute),
-                    res = {
+                    route = app.ymap.multiRoute.getRoute(app.ymap.multiRoute);
+
+                if(route && route.forEach){
+                    let arr = [];
+                    route.forEach(function(val){
+                        if(val) arr.push(val);
+                    });
+                    route = arr;
+                }
+
+                let res = {
                         id:     data.id || createId(),
                         date:   data.date,
                         name:   data.name,

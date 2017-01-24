@@ -86,7 +86,7 @@
 	    value: true
 	});
 	
-	exports.default = function (map, route, note) {
+	exports.default = function (map, route, note, delay) {
 	    /* Массив с точками маршрута */
 	    var localStorageRoute = route || ["Мытищи, рождественская, 11", "Москва, архитектора власова, 41"],
 	
@@ -106,6 +106,7 @@
 	        editBtn = (0, _mapButtons2.default)(map);
 	
 	    ymaps.table_note = note;
+	    ymaps.table_delay = delay;
 	
 	    if (map.multiRoute) map.geoObjects.remove(map.multiRoute);
 	    map.multiRoute = multiRoute;
@@ -33328,15 +33329,54 @@
 	
 	        // Метод, формирующий общую часть описания для всех типов маршрутов.
 	        createCommonRouteOutput: function createCommonRouteOutput(route) {
-	            return "Протяженность маршрута: <strong>" + route.properties.get("distance").text + "</strong>  Время в пути: <strong>" + route.properties.get("duration").text + "</strong>";
+	            return "Маршрут: <strong>" + route.properties.get("distance").text + "</strong>  Время: <strong>" + route.properties.get("duration").text + "</strong>";
+	        },
+	
+	        createTableRow: function createTableRow(path, i, distance, duration, calc, bg) {
+	            var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+	                durationArr = duration.split(' '),
+	                res = '<tr class="one_day_' + bg + '">' + '<td class="custom-view-table-number">' + (i + 1) + '</td>' + '<td class="custom-view-table-alphabet">' + alphabet[i] + ' 一 ' + alphabet[i + 1] + '</td>' + '<td class="custom-view-table-distance">' + distance + '</td>' + '<td class="custom-view-table-duration-hour">' + (durationArr[1] ? durationArr[0] : '') + '</td>' + '<td class="custom-view-table-duration-minute">' + (durationArr[1] ? durationArr[1] : durationArr[0]) + '</td>' + '<td class="custom-view-table-calc">' + calc + '</td>' + '<td class="custom-view-table-delay"><input ng-model="route.tabledelay_' + i + '"';
+	
+	            if (ymaps.table_delay && ymaps.table_delay[i]) res += ' value="' + ymaps.table_delay[i] + '"';
+	
+	            res += '></td><td class="custom-view-table-text"><input ng-model="route.tabletext_' + i + '"';
+	
+	            if (ymaps.table_note && ymaps.table_note[i]) res += ' value="' + ymaps.table_note[i] + '"';
+	
+	            res += '></td></tr>';
+	
+	            return res;
+	        },
+	
+	        durationCalculate: function durationCalculate(time, durationValue) {
+	
+	            var begin = this.createShowTime(time),
+	                end = this.createShowTime(time + durationValue);
+	
+	            return begin + ' - ' + end;
+	        },
+	
+	        createShowTime: function createShowTime(time) {
+	            var inMinutes = Math.round(time / 60),
+	                minutes = inMinutes % 60,
+	                showMinutes = Math.round(minutes / 10) * 10,
+	                hours = (inMinutes - minutes) / 60;
+	
+	            if (hours > 23) hours = hours - 24;
+	
+	            if (showMinutes < 10) showMinutes = '0' + showMinutes;
+	            if (hours < 10) hours = '&nbsp;' + hours;
+	
+	            return hours + '<sup>' + showMinutes + '</sup>';
 	        },
 	
 	        // Метод строящий список текстовых описаний для
 	        // всех сегментов маршрута на общественном транспорте.
 	        createMasstransitRouteOutput: function createMasstransitRouteOutput(route) {
 	            var result = [],
-	                alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-	                points = route.multiRoute.getWayPoints();
+	                points = route.multiRoute.getPoints(),
+	                time = 9 * 60 * 60,
+	                background = 0;
 	
 	            ymaps.myMultiRoute = route.multiRoute;
 	
@@ -33345,22 +33385,29 @@
 	            points[0].properties._data.name = 'СТАРТ';
 	
 	            for (var i = 0, l = route.getPaths().length; i < l; i++) {
-	                var path = route.getPaths()[i];
-	                var distance = path._json.properties.distance ? path._json.properties.distance.text : '',
+	                var path = route.getPaths()[i],
+	                    distance = path._json.properties.distance ? path._json.properties.distance.text : '',
 	                    duration = path._json.properties.duration ? path._json.properties.duration.text : '',
-	                    res = '<tr><td class="custom-view-table-number">' + (i + 1) + '</td><td class="custom-view-table-alphabet">' + alphabet[i] + ' 一 ' + alphabet[i + 1] + '</td>' + '<td class="custom-view-table-distance">' + distance + '</td>' + '<td class="custom-view-table-duration">' + duration + '</td>' + '<td><input  class="custom-view-table-text" ng-model="route.tabletext_' + i + '"';
+	                    durationValue = path._json.properties.duration ? path._json.properties.duration.value : 0,
+	                    durationCalc = this.durationCalculate(time, durationValue),
+	                    delay = ymaps.table_delay && ymaps.table_delay[i] ? ymaps.table_delay[i] : 0;
 	
-	                if (ymaps.table_note && ymaps.table_note[i]) res += ' value="' + ymaps.table_note[i] + '"';
+	                result.push(this.createTableRow(path, i, distance, duration, durationCalc, background));
 	
-	                res += '></td></tr>';
+	                if (isFinite(delay)) {
+	                    time = time + durationValue + delay * 60 * 60;
+	                } else {
+	                    time = 9 * 60 * 60;
+	                    if (background === 0) {
+	                        background = 1;
+	                    } else {
+	                        background = 0;
+	                    }
+	                }
 	
-	                result.push(res);
+	                if (time > 24 * 60 * 60) time = time - 24 * 60 * 60;
 	
 	                if (points[i + 1]) points[i + 1].properties._data.name = distance + ' - ' + duration;
-	
-	                /*for (var j = 0, k = path.getSegments().length; j < k; j++) {
-	                 result.push("<li>" + path.getSegments()[j].properties.get("text") + "</li>");
-	                 }*/
 	            }
 	            return result.join("");
 	        },
@@ -33387,7 +33434,7 @@
 	          },*/
 	
 	        getRoute: function getRoute() /*multiRoute*/{
-	            var way = ymaps.myMultiRoute.getWayPoints(),
+	            var way = ymaps.myMultiRoute.getPoints(),
 	                wayArr = [];
 	
 	            if (way && way.forEach) way.forEach(function (valWay) {
@@ -33453,8 +33500,10 @@
 	        /* Новый маршрут */
 	        $scope.newRoute = function () {
 	            $scope.route = {
+	                id: null,
 	                name: '',
 	                text: '',
+	                date: null,
 	                type: $scope.typelist.conver['plan']
 	            };
 	
@@ -33467,9 +33516,9 @@
 	
 	        /* Открыть маршрут */
 	        $scope.openRoute = function (data) {
-	            console.info('open - ', data);
+	
 	            $scope.route = {
-	                _id: data._id,
+	                id: data.id,
 	                name: data.name,
 	                text: data.text,
 	                date: data.date ? new Date(data.date) : null,
@@ -33479,18 +33528,20 @@
 	            $('#viewData').show();
 	
 	            if (app && app.ymap && mapRouteCreate) {
-	                mapRouteCreate(app.ymap, JSON.parse(data.route), data.note);
+	                mapRouteCreate(app.ymap, JSON.parse(data.route), data.note, data.delay);
 	            }
 	        };
 	
 	        /* Сохранить маршрут */
 	        $scope.saveRoute = function (data) {
-	            console.info('save - ', data);
-	            var $tablenote = $('.custom-view-table-text'),
+	
+	            var $tablenote = $('.custom-view-table-text input'),
+	                $tabledelay = $('.custom-view-table-delay input'),
+	                tabledelay = [],
 	                tablenote = [],
 	                route = app.ymap.multiRoute.getRoute(app.ymap.multiRoute),
 	                res = {
-	                _id: data._id || null,
+	                id: data.id || createId(),
 	                date: data.date,
 	                name: data.name,
 	                type: $scope.typelist.conver[data.type],
@@ -33502,16 +33553,32 @@
 	                tablenote.push($(a).val());
 	            });
 	            res.note = tablenote;
-	            console.info('save res - ', res);
-	            $http.post('/api/save', res).then(function () {
+	
+	            $tabledelay.each(function (t, a) {
+	                tabledelay.push($(a).val());
+	            });
+	            res.delay = tabledelay;
+	
+	            $http.post('/api/save', res).then(function (result) {
 	                $scope.getRoutes();
+	
+	                if (result && result.data) $scope.openRoute(result.data[0]);
 	            });
 	        };
 	
 	        $scope.removeRoute = function (data) {
-	            $http.post('/api/remove', JSON.stringify({ _id: data._id })).then(function () {
+	            $http.post('/api/remove', JSON.stringify({ id: data.id })).then(function () {
 	                $scope.getRoutes();
 	            });
+	        };
+	
+	        function createId() {
+	            var text = "";
+	            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	
+	            for (var i = 0; i < 10; i++) {
+	                text += possible.charAt(Math.floor(Math.random() * possible.length));
+	            }return text;
 	        };
 	
 	        $scope.getRoutes();

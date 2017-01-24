@@ -37,9 +37,11 @@ export default function(angular, mapRouteCreate){
             /* Новый маршрут */
             $scope.newRoute = function () {
                 $scope.route = {
-                    name: '',
-                    text: '',
-                    type: $scope.typelist.conver['plan']
+                    id:     null,
+                    name:   '',
+                    text:   '',
+                    date:   null,
+                    type:   $scope.typelist.conver['plan']
                 };
 
                 $('#viewData').show();
@@ -51,9 +53,9 @@ export default function(angular, mapRouteCreate){
 
             /* Открыть маршрут */
             $scope.openRoute = function (data) {
-console.info('open - ',data);
+
                 $scope.route = {
-                    _id:    data._id,
+                    id:     data.id,
                     name:   data.name,
                     text:   data.text,
                     date:   data.date ? (new Date(data.date)) : null,
@@ -63,18 +65,20 @@ console.info('open - ',data);
                 $('#viewData').show();
 
                 if(app && app.ymap && mapRouteCreate){
-                    mapRouteCreate(app.ymap, JSON.parse(data.route), data.note);
+                    mapRouteCreate(app.ymap, JSON.parse(data.route), data.note, data.delay);
                 }
             };
 
             /* Сохранить маршрут */
             $scope.saveRoute = function (data) {
-console.info('save - ',data);
-                let $tablenote = $('.custom-view-table-text'),
+
+                let $tablenote = $('.custom-view-table-text input'),
+                    $tabledelay = $('.custom-view-table-delay input'),
+                    tabledelay = [],
                     tablenote = [],
                     route = app.ymap.multiRoute.getRoute(app.ymap.multiRoute),
                     res = {
-                        _id:    data._id || null,
+                        id:     data.id || createId(),
                         date:   data.date,
                         name:   data.name,
                         type:   $scope.typelist.conver[data.type],
@@ -84,18 +88,32 @@ console.info('save - ',data);
 
                 $tablenote.each(function(t,a){tablenote.push($(a).val())});
                 res.note = tablenote;
-console.info('save res - ',res);
-                $http.post('/api/save', res).then(function () {
+
+                $tabledelay.each(function(t,a){tabledelay.push($(a).val())});
+                res.delay = tabledelay;
+
+                $http.post('/api/save', res).then(function (result) {
                     $scope.getRoutes();
+
+                    if(result && result.data) $scope.openRoute(result.data[0]);
                 });
             };
 
             $scope.removeRoute = function(data){
-                $http.post('/api/remove', JSON.stringify({_id: data._id})).then(function(){
+                $http.post('/api/remove', JSON.stringify({id: data.id})).then(function(){
                     $scope.getRoutes();
                 });
             };
 
+            function createId(){
+                var text = "";
+                var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+                for( var i=0; i < 10; i++ )
+                    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+                return text;
+            };
 
             $scope.getRoutes();
         });

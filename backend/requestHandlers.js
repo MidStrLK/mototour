@@ -38,11 +38,11 @@ function submitRequest(response, handle, pathname, postData, COLLECTION) {
                 mongodb.selectList(func, COLLECTION);
                 //menu.exp(func, mongodb, COLLECTION);
             }else if (pathname === '/save') {
-                mongodb.insertList(postData, func, COLLECTION);
-                //save.exp(func, postData, mongodb, COLLECTION, menu);
+                //mongodb.insertList(postData, func, COLLECTION);
+                save.exp(func, postData, mongodb, COLLECTION);
             }else if (pathname === '/remove') {
                 //console.info('postData - ',postData);
-                mongodb.removeId(postData._id, func, COLLECTION);
+                mongodb.removeId(postData.id, func, COLLECTION);
                 //save.exp(func, mongodb, COLLECTION);
             }else {
                 response['writeHead'](500, {'Content-Type': 'application/json', 'charset': 'utf-8'});

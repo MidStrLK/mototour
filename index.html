@@ -8,9 +8,11 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css" media="screen">
     <link rel="stylesheet" href="styles.css" media="screen" title="no title">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa|Inconsolata" rel="stylesheet">
 
     <script src="http://yandex.st/jquery/2.2.3/jquery.min.js" type="text/javascript"></script>
     <script src="http://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+
 </head>
 
 <body>
@@ -48,7 +50,7 @@
                 <tr>
                     <td id="viewData">
                         <!--<form ng-submit="saveRoute(id, nameroute, type, text)">-->
-                            <input type="hidden"    ng-model="route._id"/>
+                            <input type="hidden"    ng-model="route.id"/>
                             <input class="input-name" ng-model="route.name" required placeholder="Название"/>
                             <select name="type"     ng-model="route.type">
                                 <option ng-repeat="item in typelist.combo" value="{{item}}" >{{item}}</option>

@@ -1,12 +1,15 @@
 'use strict';
 
-let mongodb = require("./mongodb");
-
 exports.exp = saveRoute;
 
 /* ПРОВЕРЯЕТ ЗАГРУЖЕННЫЕ И ЗАГРУЖАЕМЫЕ */
-function saveRoute(callback, data, COLLECTION){
-    console.info('data - ',data);
+function saveRoute(callback, data,mongodb, COLLECTION){
+    let func = function(err, result){
+        let res = '';
+        if(!err && result && result.ops) res = result.ops;
 
-    mongodb.insertList(data, callback, COLLECTION);
+        callback(err, res);
+    };
+
+    mongodb.insertList(data, func, COLLECTION);
 }

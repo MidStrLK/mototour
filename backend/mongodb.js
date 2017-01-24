@@ -3,7 +3,6 @@ var connection_string = '127.0.0.1:27017/motoroute';
 // if OPENSHIFT env variables are present, use the available connection info:
 
 var mongo = require('mongodb').MongoClient,
-    ObjectId = require('mongodb').ObjectId,
     formatDate = require('./formatdate'),
     opendb,
     openconnection = [],
@@ -40,16 +39,16 @@ function selectListRemembered(callback, COLLECTION){
 
 function insertList(data, callback, COLLECTION){
     console.info('data - ',data);
-    if(data._id){
-        updateDB(data._id, data, callback, COLLECTION)
+    if(data.id){
+        updateDB(data.id, data, callback, COLLECTION)
     }else{
         insertDB(data, callback, COLLECTION)
     }
 
 }
 
-function updateMD(_id, data, COLLECTION){
-    updateDB(_id, data, COLLECTION)
+function updateMD(id, data, COLLECTION){
+    updateDB(id, data, COLLECTION)
 }
 
 function selectList(callback, COLLECTION){
@@ -57,7 +56,7 @@ function selectList(callback, COLLECTION){
 }
 
 function removeId(id, callback, COLLECTION){
-    removeDB({_id: ObjectId(id)}, callback, COLLECTION)
+    removeDB({id: id}, callback, COLLECTION)
 }
 
 /*--- ВЫСШИЙ УРОВЕНЬ ---*/
@@ -83,17 +82,17 @@ function insertDB(data, callback, COLLECTION){
 }
 
 /* Заменяем данные в БД */
-function updateDB(_id, data, callback, COLLECTION){
+function updateDB(id, data, callback, COLLECTION){
     if(!COLLECTION && openconnection[name]) COLLECTION = openconnection[name];
 
     if(!COLLECTION || !COLLECTION.update){
         collectionMongo(function(){
-            updateDB(_id, data, callback);
+            updateDB(id, data, callback);
         })
     }else{
         //COLLECTION.update({_id: _id}, data);
 
-        removeDB({_id: _id},function(err, result){
+        removeDB({id: id},function(err, result){
             if(!err){
                 insertDB(data, callback, COLLECTION)
             }else{
@@ -130,8 +129,10 @@ function removeDB(data, callback, COLLECTION){
             removeDB(data, callback);
         })
     }else{
-        if(data){
-            COLLECTION.remove(data, callback)
+
+
+        if(data.id){
+            COLLECTION.remove({id: data.id}, callback)
         }else {
             COLLECTION.remove(callback)
         }

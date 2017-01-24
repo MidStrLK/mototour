@@ -193,7 +193,7 @@ body {
 }
 
 body {
-  font: 12px/18px Arial, sans-serif;
+  font: 12px/18px 'Comfortaa', cursive;
   height: 100%;
   background-color: black;
 }
@@ -265,6 +265,8 @@ button {
 
 button {
   background-color: #eafa02;
+  font-style: italic;
+  text-decoration: underline;
 }
 
 strong {
@@ -300,6 +302,19 @@ table {
 #viewContainer #custom-view-table {
   width: 100%;
   margin: 10px;
+  font-family: 'Inconsolata', monospace;
+}
+
+#viewContainer #custom-view-table .one_day_0 {
+  background-color: black;
+  color: #c3b11a;
+  border: 1px solid black;
+}
+
+#viewContainer #custom-view-table .one_day_1 {
+  background-color: #c3b11a;
+  color: black;
+  border: 1px solid #c3b11a;
 }
 
 #viewContainer #custom-view-table .custom-view-table-number {
@@ -318,17 +333,54 @@ table {
   padding-right: 10px;
 }
 
-#viewContainer #custom-view-table .custom-view-table-duration {
-  width: 100px;
+#viewContainer #custom-view-table .custom-view-table-duration-hour {
+  width: 35px;
+  text-align: right;
+}
+
+#viewContainer #custom-view-table .custom-view-table-duration-minute {
+  width: 50px;
+  text-align: right;
+}
+
+#viewContainer #custom-view-table .custom-view-table-calc {
+  width: 80px;
+  text-align: center;
+}
+
+#viewContainer #custom-view-table .custom-view-table-calc sup {
+  text-decoration: underline;
+  font-size: 10px;
+}
+
+#viewContainer #custom-view-table .custom-view-table-delay {
+  width: 40px;
+  background-color: #2B2C39;
+  border: 1px solid #FFC500;
+  border-right: none;
+}
+
+#viewContainer #custom-view-table .custom-view-table-delay input {
   text-align: left;
+  width: 40px;
+  color: #FFC500;
+  background-color: #2B2C39;
+  padding-left: 5px;
+  border: none;
 }
 
 #viewContainer #custom-view-table .custom-view-table-text {
+  background-color: #2B2C39;
+  border: 1px solid #FFC500;
+}
+
+#viewContainer #custom-view-table .custom-view-table-text input {
   text-align: left;
   width: 100%;
   color: #FFC500;
   background-color: #2B2C39;
-  border: 1px solid #FFC500;
+  border: none;
+  padding-left: 5px;
 }
 
 #viewData {
@@ -346,19 +398,19 @@ table {
 
 #viewData .input-name {
   height: 25px;
-  width: 192px;
+  width: 196px;
   display: inline-block;
 }
 
 #viewData .input-date {
   height: 25px;
-  width: 150px;
+  width: 130px;
   display: inline-block;
 }
 
 #viewData select {
   color: black;
-  width: 150px;
+  width: 165px;
   height: 25px;
   display: inline-block;
 }

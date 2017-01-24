@@ -40,7 +40,9 @@ function selectListRemembered(callback, COLLECTION){
 function insertList(data, callback, COLLECTION){
     console.info('data - ',data);
     if(data.id){
-        updateDB(data.id, data, callback, COLLECTION)
+        updateDB({id: data.id}, data, callback, COLLECTION)
+    }else if(data.name){
+        updateDB({name: data.name}, data, callback, COLLECTION)
     }else{
         insertDB(data, callback, COLLECTION)
     }
@@ -92,7 +94,7 @@ function updateDB(id, data, callback, COLLECTION){
     }else{
         //COLLECTION.update({_id: _id}, data);
 
-        removeDB({id: id},function(err, result){
+        removeDB(id,function(err, result){
             if(!err){
                 insertDB(data, callback, COLLECTION)
             }else{

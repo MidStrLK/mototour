@@ -20,10 +20,14 @@ $menu-width: 300px;
       vertical-align:middle;
 
       .plan_date{
-        width: 70px;
+        width: 80px;
         padding: 0 5px;
         font: 12px 'Roboto';
         color: yellow;
+      }
+
+      .plan_name{
+        width: 200px;
       }
 
     }

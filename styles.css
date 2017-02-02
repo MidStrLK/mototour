@@ -228,10 +228,14 @@ body {
 }
 
 .sidebar tr td .plan_date {
-  width: 70px;
+  width: 80px;
   padding: 0 5px;
   font: 12px 'Roboto';
   color: yellow;
+}
+
+.sidebar tr td .plan_name {
+  width: 200px;
 }
 
 .sidebar tr:hover {

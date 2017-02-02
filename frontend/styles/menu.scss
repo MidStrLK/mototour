@@ -16,9 +16,16 @@ $menu-width: 300px;
     border: 1px dotted black;
 
     td {
-      padding: 0 5px;
       width: $menu-width;
       vertical-align:middle;
+
+      .plan_date{
+        width: 70px;
+        padding: 0 5px;
+        font: 12px 'Roboto';
+        color: yellow;
+      }
+
     }
   }
 

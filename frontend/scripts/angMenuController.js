@@ -29,9 +29,19 @@ export default function(angular, mapRouteCreate){
                     $scope.festlist = [];
 
                     data.forEach(function(val){
+                        val.date = $scope.getTrueDate(val.date);
+                        console.info('val - ',val);
                         if(val.type && $scope[val.type + 'list']) $scope[val.type + 'list'].push(val);
                     });
                 });
+            };
+
+            $scope.getTrueDate = function(dateUTC){
+                if(!dateUTC) return '';
+
+                const date = dateUTC.split('T')[0].split('-');
+
+                return [date[2], date[1], date[0]].join('.');
             };
 
             /* Новый маршрут */

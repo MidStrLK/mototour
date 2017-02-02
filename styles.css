@@ -223,9 +223,15 @@ body {
 }
 
 .sidebar tr td {
-  padding: 0 5px;
   width: 300px;
   vertical-align: middle;
+}
+
+.sidebar tr td .plan_date {
+  width: 70px;
+  padding: 0 5px;
+  font: 12px 'Roboto';
+  color: yellow;
 }
 
 .sidebar tr:hover {
@@ -403,6 +409,7 @@ table {
 }
 
 #viewData .input-date {
+  padding-top: 2px;
   height: 25px;
   width: 130px;
   display: inline-block;

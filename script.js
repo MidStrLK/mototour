@@ -33489,6 +33489,22 @@
 	                if (response && typeof response === 'string') response = JSON.parse(response);
 	                var data = response.data;
 	
+	                if (!data || !data.forEach) return;
+	
+	                data.sort(function (left, right) {
+	                    var l = left.date,
+	                        r = right.date,
+	                        res = 0;
+	
+	                    if (r > l) {
+	                        res = -1;
+	                    } else if (r < l) {
+	                        res = 1;
+	                    }
+	
+	                    return res;
+	                });
+	
 	                $scope.donelist = [];
 	                $scope.planlist = [];
 	                $scope.festlist = [];

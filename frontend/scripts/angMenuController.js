@@ -22,7 +22,23 @@ export default function(angular, mapRouteCreate){
             $scope.getRoutes = function(){
                 $http.get('/api/getmenu').then(function (response) {
                     if (response && typeof response === 'string') response = JSON.parse(response);
-                    const data = response.data;
+                    let data = response.data;
+
+                    if(!data || !data.forEach) return;
+
+                    data.sort(function(left, right){
+                        let l = left.date,
+                            r = right.date,
+                            res = 0;
+
+                        if(r>l){
+                            res = -1;
+                        }else if(r<l){
+                            res = 1;
+                        }
+
+                        return res;
+                    });
 
                     $scope.donelist = [];
                     $scope.planlist = [];
